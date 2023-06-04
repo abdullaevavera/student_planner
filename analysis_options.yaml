@@ -1,0 +1,19 @@
+include: package:lint/analysis_options.yaml
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    prefer_relative_imports: true
+    always_use_package_imports: false
+
+analyzer:
+  language:
+    strict-inference: true
+  exclude:
+    - "**.g.dart"
+    - "**.freezed.dart"
+  errors:
+    missing_return: error
+    missing_required_param: error
+    parameter_assignments: error
+    todo: info
