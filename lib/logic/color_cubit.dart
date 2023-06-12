@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 
+import '../ui/utils.dart';
+
 class ColorCubit extends Cubit<Color> {
-  ColorCubit() : super(const Color(0xFF000000));
+  ColorCubit() : super(availableColors.first);
 
   void onColorSelected(Color selectedColor) => emit(selectedColor);
 }

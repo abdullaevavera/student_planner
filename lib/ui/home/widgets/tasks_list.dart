@@ -30,6 +30,14 @@ class TasksList extends StatelessWidget {
           final tagName = tag?.name;
           final tagColor = tag?.color != null ? Color(tag!.color) : null;
 
+          Color? textColor;
+
+          final isOver = task.deadline.isBefore(DateTime.now());
+
+          if (isOver) {
+            textColor = Theme.of(context).disabledColor;
+          }
+
           return InkWell(
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -43,7 +51,10 @@ class TasksList extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Text(deadline),
+                  Text(
+                    deadline,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: textColor),
+                  ),
                   const Gap(8),
                   if (tagColor != null) ...[
                     ColoredMark(color: tagColor),
@@ -56,21 +67,21 @@ class TasksList extends StatelessWidget {
                         if (tagName != null)
                           Text(
                             tagName,
-                            style: Theme.of(context).textTheme.caption,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor),
                           ),
                         Text(
                           title,
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: textColor),
                         ),
                         if (description != null)
                           Text(
                             description,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: textColor),
                           ),
                         if (place != null)
                           Text(
                             place,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: textColor),
                           ),
                       ],
                     ),

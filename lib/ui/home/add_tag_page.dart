@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/sources/local/drift/db.dart';
 import '../../logic/color_cubit.dart';
+import '../utils.dart';
 import 'widgets/colored_mark.dart';
 
 class AddTagPage extends StatefulWidget {
@@ -44,7 +45,7 @@ class _AddTagPageState extends State<AddTagPage> {
                       children: [
                         Text(
                           'Name:',
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         const Gap(8),
                         Expanded(
@@ -59,7 +60,7 @@ class _AddTagPageState extends State<AddTagPage> {
                       children: [
                         Text(
                           'Color:',
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         const Gap(8),
                         BlocBuilder<ColorCubit, Color>(
@@ -69,9 +70,10 @@ class _AddTagPageState extends State<AddTagPage> {
                               builder: (_) => AlertDialog(
                                 contentPadding: const EdgeInsets.all(6.0),
                                 title: const Text('Select color'),
-                                content: MaterialColorPicker(
-                                  selectedColor: state,
-                                  onColorChange: (value) => context.read<ColorCubit>().onColorSelected(value),
+                                content: BlockPicker(
+                                  pickerColor: state,
+                                  availableColors: availableColors,
+                                  onColorChanged: (value) => context.read<ColorCubit>().onColorSelected(value),
                                 ),
                                 actions: [
                                   TextButton(
@@ -94,12 +96,20 @@ class _AddTagPageState extends State<AddTagPage> {
                         final name = nameController.text;
                         final color = context.read<ColorCubit>().state.value;
 
-                        await context.read<AppDatabase>().tagDao.insertTag(
-                              TagsCompanion.insert(
-                                name: name,
-                                color: color,
-                              ),
-                            );
+                        try {
+                          await context.read<AppDatabase>().tagDao.insertTag(
+                                TagsCompanion.insert(
+                                  name: name,
+                                  color: color,
+                                ),
+                              );
+                        } catch (_) {
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(const SnackBar(content: Text('Incorrect data!')));
+
+                          return;
+                        }
 
                         if (!mounted) return;
 

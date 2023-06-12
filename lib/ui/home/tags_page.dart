@@ -53,7 +53,7 @@ class TagsPage extends StatelessWidget {
                         Expanded(
                           child: Text(
                             tagName,
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ),
                         const Gap(8),

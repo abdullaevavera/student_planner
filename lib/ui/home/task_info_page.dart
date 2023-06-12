@@ -53,13 +53,13 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         children: [
                           Text(
                             'Title:',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           const Gap(8),
                           Expanded(
                             child: Text(
                               title,
-                              style: Theme.of(context).textTheme.headline5,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             ),
                           ),
                         ],
@@ -70,12 +70,12 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           children: [
                             Text(
                               'Description:',
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             const Gap(8),
                             Text(
                               description,
-                              style: Theme.of(context).textTheme.headline6,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ],
                         ),
@@ -85,12 +85,12 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         children: [
                           Text(
                             'Deadline:',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           const Gap(8),
                           Text(
                             deadline,
-                            style: Theme.of(context).textTheme.subtitle2,
+                            style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ],
                       ),
@@ -100,12 +100,12 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                           children: [
                             Text(
                               'Place:',
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             const Gap(8),
                             Text(
                               place,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ],
                         ),
@@ -115,7 +115,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         children: [
                           Text(
                             'Completed:',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TaskCompletionCheckbox(task: task),
                         ],
@@ -128,7 +128,7 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                             const Gap(8),
                             Text(
                               tagName,
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ],
                         ),
@@ -145,7 +145,12 @@ class _TaskInfoPageState extends State<TaskInfoPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
-                        child: const Text('Remove task'),
+                        child: Text(
+                          'Remove task',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
                       ),
                     ],
                   );

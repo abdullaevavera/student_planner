@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/sources/local/drift/db.dart';
+import '../../data/sources/local/notifications/notifications_service.dart';
 import '../../logic/date_time_cubit.dart';
 import '../../logic/tag_cubit.dart';
 import 'tags_page.dart';
@@ -67,7 +68,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             children: [
                               Text(
                                 'Title:',
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const Gap(8),
                               Expanded(
@@ -83,7 +84,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             children: [
                               Text(
                                 'Description:',
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const Gap(8),
                               Expanded(
@@ -98,7 +99,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             children: [
                               Text(
                                 'Deadline:',
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const Gap(8),
                               Expanded(
@@ -120,6 +121,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                   );
 
                                   if (dateTime == null) return;
+
+                                  if (!mounted) return;
 
                                   final timeOfDay = await showTimePicker(
                                     context: context,
@@ -148,7 +151,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             children: [
                               Text(
                                 'Place:',
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const Gap(8),
                               Expanded(
@@ -163,7 +166,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             children: [
                               Text(
                                 'Tag:',
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               const Gap(8),
                               Expanded(
@@ -178,7 +181,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                           padding: const EdgeInsets.all(4),
                                           child: Text(
                                             'None',
-                                            style: Theme.of(context).textTheme.bodyText1,
+                                            style: Theme.of(context).textTheme.bodyLarge,
                                           ),
                                         ),
                                       ),
@@ -193,7 +196,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                                 const Gap(8),
                                                 Text(
                                                   e.name,
-                                                  style: Theme.of(context).textTheme.bodyText1,
+                                                  style: Theme.of(context).textTheme.bodyLarge,
                                                 ),
                                               ],
                                             ),
@@ -224,16 +227,37 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               final deadline = context.read<DateTimeCubit>().state;
                               final place = placeController.text;
 
-                              await context.read<AppDatabase>().taskDao.insertTask(
-                                    TasksCompanion.insert(
-                                      tagName: drift.Value(tagName),
-                                      createdAt: DateTime.now(),
-                                      title: title,
-                                      description: drift.Value(description),
-                                      deadline: deadline,
-                                      place: drift.Value(place),
-                                    ),
-                                  );
+                              try {
+                                await context.read<AppDatabase>().taskDao.insertTask(
+                                      TasksCompanion.insert(
+                                        tagName: drift.Value(tagName),
+                                        createdAt: DateTime.now(),
+                                        title: title,
+                                        description: drift.Value(description),
+                                        deadline: deadline,
+                                        place: drift.Value(place),
+                                      ),
+                                    );
+
+                                if (!mounted) return;
+
+                                try {
+                                  await context.read<NotificationsService>().scheduleNotification(
+                                        androidChannelId: 'androidChannelId',
+                                        androidChannelName: 'androidChannelName',
+                                        dateTime: deadline.subtract(const Duration(minutes: 10)),
+                                        title: title,
+                                        body: description,
+                                        payload: description,
+                                      );
+                                } catch (_) {}
+                              } catch (_) {
+                                ScaffoldMessenger.of(context)
+                                  ..clearSnackBars()
+                                  ..showSnackBar(const SnackBar(content: Text('Incorrect data!')));
+
+                                return;
+                              }
 
                               if (!mounted) return;
 

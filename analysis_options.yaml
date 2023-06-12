@@ -1,14 +1,13 @@
-include: package:lint/analysis_options.yaml
+include: package:lint/strict.yaml
 
 linter:
   rules:
+    sort_pub_dependencies: false
     prefer_single_quotes: true
     prefer_relative_imports: true
     always_use_package_imports: false
 
 analyzer:
-  language:
-    strict-inference: true
   exclude:
     - "**.g.dart"
     - "**.freezed.dart"

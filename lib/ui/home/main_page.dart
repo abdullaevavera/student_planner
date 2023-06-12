@@ -37,13 +37,12 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-          bottomNavigationBar: BottomAppBar(
-            color: Theme.of(context).primaryColor,
-            shape: const CircularNotchedRectangle(),
+          bottomNavigationBar: const BottomAppBar(
+            shape: CircularNotchedRectangle(),
             notchMargin: 8,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
+              children: [
                 _Button(
                   index: 0,
                   icon: Icons.today,
@@ -84,7 +83,6 @@ class _Button extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
         icon: Icon(
           icon,
-          color: Theme.of(context).colorScheme.onSecondary,
         ),
         iconSize: 32,
         onPressed: () => context.read<TabCubit>().onItemTapped(index),
